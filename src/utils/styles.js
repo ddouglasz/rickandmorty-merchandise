@@ -49,8 +49,8 @@ export const typography = {
 
 // Borders
 export const borders = {
-  borderRadius: "4px",
-  borderRadius_l: "13px",
+  borderRadius: "10px",
+  borderRadius_l: "25px",
   boxShadow: `0px 4px 12px 0px ${rgba("#000", 0.12)}`,
   boxShadow_s: `0px 2px 6px 0px ${rgba("#000", 0.2)}`,
   boxShadow_l: `0px 12px 24px 0px ${rgba("#000", 0.2)}`,
