@@ -1,0 +1,40 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 3625845, 2018-08-22T16:33:07-0400
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: FuseV.2Display-Black by W Foundry
+ * URL: https://www.myfonts.com/fonts/without-foundry/fuse-v-2/display-black/
+ * Copyright: Copyright &#x00A9; 2016 by Salvador Rodr&#x00ED;guez y Diego Aravena. All rights reserved.
+ * 
+ * Webfont: AkwePro-Bold by ROHH
+ * URL: https://www.myfonts.com/fonts/rohh/akwe-pro/bold/
+ * Copyright: Copyright &#x00A9; 2017 by Roch Modrzejewski. All rights reserved.
+ * 
+ * Webfont: AkwePro-DemiBold by ROHH
+ * URL: https://www.myfonts.com/fonts/rohh/akwe-pro/demi-bold/
+ * Copyright: Copyright &#x00A9; 2017 by Roch Modrzejewski. All rights reserved.
+ * 
+ * Webfont: AkwePro-Regular by ROHH
+ * URL: https://www.myfonts.com/fonts/rohh/akwe-pro/regular/
+ * Copyright: Copyright &#x00A9; 2017 by Roch Modrzejewski. All rights reserved.
+ * 
+ * 
+ * License: https://www.myfonts.com/viewlicense?type=web&buildid=3625845
+ * Licensed pageviews: 1,000,000
+ * 
+ * © 2018 MyFonts Inc
+*/
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/375375");
+
+@font-face {
+  font-family: "GrinchedRegular";
+  src: url("GrinchedRegular.otf");
+}

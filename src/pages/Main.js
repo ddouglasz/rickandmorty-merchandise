@@ -1,51 +1,59 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import HeroBackground from "../assets/hero/rickAndMorty.png";
-import HeroBackgroundMobile from "../assets/hero/rickAndMortyMobile.png";
 
-import { searchRickAndMortyCharacters } from "../actions/index";
+import {
+  searchRickAndMortyCharacters,
+  getAllCharacters,
+} from "../actions/index";
 
 import { respondTo } from "../utils/stylesHelper.js";
 
 const SearchPage = styled.div`
-  .hero-background {
-    text-align: center;
-    background-repeat: no-repeat;
-    margin: auto;
-    padding: auto;
-    width: 100%;
-    height: 85vh;
-    background-image: url(${HeroBackground});
-    ${respondTo("medium", "max")} {
-      background-image: url(${HeroBackgroundMobile});
+  text-align: center;
+  .page-title {
+    font-family: GrinchedRegular;
+    font-size: 125px;
+    margin: 50px auto;
+    ${respondTo("large", "max")} {
+      font-size: 50px;
+      margin-top: 40%;
     }
+  }
+  .sub-text {
+    margin-bottom: 40px;
   }
   .search-input {
     top: 50%;
-    width: 560px;
-    height: 44px;
+    width: 50%;
+    height: 50px;
+    margin: 10px 20px;
     padding: 2px 20px;
     justify-content: center;
     border-radius: ${(props) => props.theme.borders.borderRadius_l};
-    border-color: ${(props) => props.theme.colors.gray};
+    ${respondTo("small", "max")} {
+      width: 80%;
+    }
   }
   input[type="text"],
   input[type="password"],
   textarea,
   select {
     outline: none;
+    border: solid 1px ${(props) => props.theme.colors.gray};
   }
   .search-form {
+    text-align: center;
     display: block;
     justify-content: center;
+    border: none;
   }
 `;
 
 const StyledCard = styled.div`
-  @media screen and (max-width: 736px) {
+  /* @media screen and (max-width: 736px) {
     display: block;
-  }
+  } */
   display: flex;
   background: ${(props) => props.theme.colors.gray};
   margin-bottom: 1rem;
@@ -62,12 +70,6 @@ const StyledCard = styled.div`
 
   .event-description {
     color: #239ad7;
-  }
-
-  #search-result {
-    @media screen and (max-width: 736px) {
-      margin-top: 15px;
-    }
   }
 `;
 
@@ -92,8 +94,23 @@ const Main = () => {
   const [status, setStatus] = useState("");
   const [species, setSpecies] = useState("");
   const [type, setType] = useState("");
+  const [characterNames, setCharacterNames] = useState([]);
 
-  const searchSuggestion = (subStr) => {
+  const searchSuggestion = (subStr, page) => {
+    getAllCharacters(page)
+      .then((result) => {
+        if (result.error) {
+          return setError(result.error);
+        }
+        if (result) {
+          // console.log("searched-->>", result);
+          return setCharacterNames(result.name);
+        }
+      })
+      .catch((error) => {
+        return setError(error);
+      });
+
     return characterNames.filter((item) =>
       item.toLocaleLowerCase().includes(subStr.toLocaleLowerCase())
     );
@@ -173,33 +190,37 @@ const Main = () => {
   return (
     <>
       <SearchPage>
-        <div className="hero-background">
-          <form
-            className="search-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-          >
-            <input
-              type="text"
-              className="search-input"
-              name="searchResult"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {search &&
-              searchSuggestion(search).map((result) => (
-                <Autosuggest
-                  className="auto-suggest"
-                  onClick={() => setSearch(result)}
-                >
-                  {result}
-                </Autosuggest>
-              ))}
-          </form>
-        </div>
+        {/* <div className="hero-background"> */}
+        <form
+          className="search-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <div className="page-title">RICKANDMORTY</div>
+          <p className="sub-text">
+            Merchandise powered by <strong>BigCorp &copy;</strong>
+          </p>
+          <input
+            type="text"
+            className="search-input"
+            name="searchResult"
+            placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search &&
+            searchSuggestion(search).map((result) => (
+              <Autosuggest
+                className="auto-suggest"
+                onClick={() => setSearch(result)}
+              >
+                {result}
+              </Autosuggest>
+            ))}
+        </form>
+        {/* </div> */}
       </SearchPage>
       {searchResult.length !== 0 && (
         <StyledCard>
