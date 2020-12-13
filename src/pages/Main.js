@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { characterNames } from "../utils/shrekCharacterNames";
 
 import {
   searchRickAndMortyCharacters,
@@ -9,7 +10,7 @@ import {
 
 import { respondTo } from "../utils/stylesHelper.js";
 
-const SearchPage = styled.div`
+const StyledSearchPage = styled.div`
   text-align: center;
   .page-title {
     font-family: GrinchedRegular;
@@ -48,12 +49,35 @@ const SearchPage = styled.div`
     justify-content: center;
     border: none;
   }
+
+  .auto-suggest {
+    display: flex;
+    border-bottom: solid 1px ${(props) => props.theme.colors.gray};
+    width: 96%;
+    height: 20px;
+    padding: 5px 0;
+    font: 400 13.3333px Arial;
+    margin: auto;
+    ${respondTo("small", "max")} {
+      width: 90%;
+    }
+  }
+`;
+
+const StykledAutosuggest = styled.div`
+  height: 50%;
+  overflow-y: scroll;
+  width: 52%;
+  margin: auto;
+  padding: 4px 2px;
+  background-color: ${(props) => props.theme.colors.grayLight};
+  border-radius: ${(props) => props.theme.borders.borderRadius_l};
+  ${respondTo("small", "max")} {
+    width: 90%;
+  }
 `;
 
 const StyledCard = styled.div`
-  /* @media screen and (max-width: 736px) {
-    display: block;
-  } */
   display: flex;
   background: ${(props) => props.theme.colors.gray};
   margin-bottom: 1rem;
@@ -73,46 +97,19 @@ const StyledCard = styled.div`
   }
 `;
 
-const Autosuggest = styled.a`
-  display: flex;
-  background-color: ${(props) => props.theme.colors.grayLight};
-  border: solid 1px ${(props) => props.theme.colors.gray};
-  width: 560px;
-  height: 35px;
-  padding: 2px 20px;
-`;
-
-const characterNames = ["Rick", "Ricky Morty", "Brave Shrek"];
-
 const Main = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [error, setError] = useState("");
-
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [status, setStatus] = useState("");
   const [species, setSpecies] = useState("");
   const [type, setType] = useState("");
-  const [characterNames, setCharacterNames] = useState([]);
 
-  const searchSuggestion = (subStr, page) => {
-    getAllCharacters(page)
-      .then((result) => {
-        if (result.error) {
-          return setError(result.error);
-        }
-        if (result) {
-          // console.log("searched-->>", result);
-          return setCharacterNames(result.name);
-        }
-      })
-      .catch((error) => {
-        return setError(error);
-      });
-
+  const searchSuggestion = (subStr) => {
     return characterNames.filter((item) =>
-      item.toLocaleLowerCase().includes(subStr.toLocaleLowerCase())
+      item.toLowerCase().includes(subStr.toLowerCase())
     );
   };
 
@@ -185,12 +182,9 @@ const Main = () => {
   //       setLoading(false);
   //     });
   // }, []);
-
-  // assingSearchParams(search);
   return (
     <>
-      <SearchPage>
-        {/* <div className="hero-background"> */}
+      <StyledSearchPage>
         <form
           className="search-form"
           onSubmit={(e) => {
@@ -210,18 +204,22 @@ const Main = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {search &&
-            searchSuggestion(search).map((result) => (
-              <Autosuggest
-                className="auto-suggest"
-                onClick={() => setSearch(result)}
-              >
-                {result}
-              </Autosuggest>
-            ))}
+          {search && (
+            <StykledAutosuggest className="search-card">
+              {searchSuggestion(search).map((result, i) => (
+                <a
+                  className="auto-suggest"
+                  onClick={() => setSearch(result)}
+                  onMouseMove={() => console.log("here")}
+                  key={i}
+                >
+                  {result}
+                </a>
+              ))}
+            </StykledAutosuggest>
+          )}
         </form>
-        {/* </div> */}
-      </SearchPage>
+      </StyledSearchPage>
       {searchResult.length !== 0 && (
         <StyledCard>
           <div>
