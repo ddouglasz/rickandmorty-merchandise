@@ -37,7 +37,6 @@ export const getAllCharacters = async (page) => {
     const characters = await Axios.get(`/character/?page=${page}`, {
       page,
     });
-    console.log("page from actions: ===>", page);
     return characters.data;
   } catch (error) {
     const { data } = error.response;

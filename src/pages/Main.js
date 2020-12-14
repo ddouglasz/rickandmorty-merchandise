@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Router } from "react-router";
+import { withRouter } from "react-router";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { characterNames } from "../utils/shrekCharacterNames";
@@ -187,4 +188,4 @@ const Main = (props) => {
   );
 };
 
-export default Main;
+export default withRouter(Main);

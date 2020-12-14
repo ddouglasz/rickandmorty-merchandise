@@ -14,7 +14,7 @@ const StyledPageCover = styled.div`
 
 const StyledCard = styled.div`
   display: flex;
-  background-color: ${(props) => props.theme.colors.grayLight};
+  background-color: ${(props) => props.theme.colors.pale_green};
   margin-bottom: 2px;
   padding: 0.5rem 1rem;
   display: flex;
@@ -47,17 +47,20 @@ const StyledCard = styled.div`
   .character-name-result {
     color: ${(props) => props.theme.colors.lime_green};
   }
+  .details-btn {
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 const ResultCard = (props) => {
-  const { state } = props.history.location;
   const { results } = props.history.location.state;
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
-  const [character, setCharacter] = [];
+  const [character, setCharacter] = useState([]);
 
   const showModal = () => {
-    return setShow(!show);
+    setShow(!show);
   };
   const showDetails = (id) => {
     getOneCharacter(id)
@@ -68,14 +71,19 @@ const ResultCard = (props) => {
         if (result && result.length !== 0) {
           showModal();
           setCharacter(result);
-          console.log("got here", () => result);
         }
       })
       .catch((error) => {
         return setError(error);
       });
   };
-  console.log("show", show);
+
+  const clear = () => {
+    props.history.push("/");
+  };
+
+  const { id, name, status, species, type, gender } = character;
+
   return (
     <>
       <StyledPageCover>
@@ -108,10 +116,7 @@ const ResultCard = (props) => {
                       {result.location.name}
                     </div>
                   </div>
-                  <div
-                    data-testid="history-card-link-element"
-                    id="history-card-btn"
-                  >
+                  <div>
                     <Button
                       onClick={(e) => {
                         e.preventDefault();
@@ -127,43 +132,36 @@ const ResultCard = (props) => {
           ))}
       </StyledPageCover>
       {show && (
-        <Modal onClose={showModal} onBlur={showModal} show={show}>
-          {character && console.log("chh==========", character)}
+        <Modal onClose={showModal} show={show}>
           <img src={character && character.image} alt="character image" />
           <div className="content">
             <div>
-              <h2>Select information to share</h2>
-              <input
-                type="checkbox"
-                data-testid="modal-input-elements"
-                name=""
-                value=""
-              />
-              <label>Flight Number: </label>
+              <label>Id: {id}</label>
               <br />
-              <input
-                type="checkbox"
-                data-testid="modal-input-elements"
-                name=""
-                value=""
-              />
-              <label>Mission Name: </label>
+              <label>Name: {name}</label>
               <br />
-              <input
-                type="checkbox"
-                data-testid="modal-input-elements"
-                name=""
-                value=""
-              />
-              <label> Launch Year: </label>
+              <label>Status: {status}</label>
+              <br />
+              <label>Species: {species}</label>
+              <br />
+              <label>Types: {type}</label>
+              <br />
+              <label>Gender: {gender}</label>
               <br />
               <br />
             </div>
           </div>
         </Modal>
       )}
-      <Button>Clear</Button> //Todo
-      <Button>Pagination</Button> //Todo
+      <Button
+        onClick={(e) => {
+          e.preventDefault();
+          clear();
+        }}
+      >
+        Clear
+      </Button>
+      <Button>Pagination</Button>
     </>
   );
 };

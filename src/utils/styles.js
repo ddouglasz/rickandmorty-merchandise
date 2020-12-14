@@ -4,6 +4,8 @@ import { rgba } from "polished";
 const colors = {
   green: "#02514C",
   lime_green: "#32CD32",
+  pale_green: "#D4D4AB",
+  lemon_green: "#D4D473",
 
   gray: "#B3B5C0",
   grayLight: "#D4D4D8",

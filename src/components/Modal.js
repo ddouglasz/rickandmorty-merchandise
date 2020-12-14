@@ -21,7 +21,7 @@ const StyledModal = styled.div`
       margin: 1rem;
     }
     padding: 1rem;
-    background: linear-gradient(45deg, #1f3059, #1b2a4e 40%, #243869);
+    background: ${(props) => props.theme.colors.lemon_green};
     width: 30rem;
     position: relative;
   }
@@ -39,16 +39,13 @@ const StyledModal = styled.div`
 `;
 
 const Modal = (props) => {
-  console.log("from modal", props);
+  console.log(props);
   const onClose = (e) => {
     props && props.onClose(e);
   };
   const buyMerchandise = () => {
     alert("Hurray! Merchandise Purchase!");
   };
-  // if (props.show) {
-  //   return null;
-  // }
   return (
     <StyledModal>
       <div data-testid="modal-container" className="inner">
@@ -63,8 +60,8 @@ const Modal = (props) => {
           data-testid="close-modal-button"
         />
         <div>
-          <h2>Launch Information</h2>
-          <div>{}</div>
+          <h2>Rick And Morty Character Information</h2>
+          <div>{props.children}</div>
         </div>
         <div className="send-btn">
           <Button
