@@ -13,13 +13,9 @@ const StyledPageCover = styled.div`
 `;
 
 const StyledCard = styled.div`
-  display: flex;
   background-color: ${(props) => props.theme.colors.pale_green};
   margin-bottom: 2px;
   padding: 0.5rem 1rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   ${respondTo("small", "max")} {
     padding: 0.5rem 1rem;
   }
@@ -35,6 +31,8 @@ const StyledCard = styled.div`
   }
   .search-card-cover {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     ${respondTo("small", "max")} {
       display: block;
     }
@@ -47,9 +45,11 @@ const StyledCard = styled.div`
   .character-name-result {
     color: ${(props) => props.theme.colors.lime_green};
   }
-  .details-btn {
-    display: flex;
-    justify-content: flex-end;
+  .more-details-btn {
+    margin-top: 180px;
+    ${respondTo("small", "max")} {
+      margin-top: 10px;
+    }
   }
 `;
 
@@ -90,8 +90,8 @@ const ResultCard = (props) => {
         {results &&
           results.map((result, i) => (
             <StyledCard key={i}>
-              <div>
-                <div className="search-card-cover">
+              <div className="search-card-cover">
+                <div>
                   <img
                     className="img-small"
                     src={result.image}
@@ -116,16 +116,16 @@ const ResultCard = (props) => {
                       {result.location.name}
                     </div>
                   </div>
-                  <div>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        showDetails(result.id);
-                      }}
-                    >
-                      More Info
-                    </Button>
-                  </div>
+                </div>
+                <div className="more-details-btn">
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showDetails(result.id);
+                    }}
+                  >
+                    More Info
+                  </Button>
                 </div>
               </div>
             </StyledCard>
