@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../utils/Buttons";
 import { withRouter } from "react-router";
 import { respondTo } from "../utils/stylesHelper.js";
+import { getOneCharacter } from "../actions/index";
+import Modal from "../components/Modal";
+import { characterNames } from "../utils/shrekCharacterNames";
 
 const StyledPageCover = styled.div`
   padding: 15px 20px;
@@ -46,19 +49,40 @@ const StyledCard = styled.div`
   }
 `;
 
-const ResultCard = (props, { image, name, episodes, location }) => {
+const ResultCard = (props) => {
   const { state } = props.history.location;
   const { results } = props.history.location.state;
+  const [show, setShow] = useState(false);
+  const [error, setError] = useState("");
+  const [character, setCharacter] = [];
 
-  console.log("state ==>>", state);
-  console.log("props ==>>", props);
+  const showModal = () => {
+    return setShow(!show);
+  };
+  const showDetails = (id) => {
+    getOneCharacter(id)
+      .then((result) => {
+        if (result.error) {
+          return setError(result.error);
+        }
+        if (result && result.length !== 0) {
+          showModal();
+          setCharacter(result);
+          console.log("got here", () => result);
+        }
+      })
+      .catch((error) => {
+        return setError(error);
+      });
+  };
+  console.log("show", show);
   return (
     <>
       <StyledPageCover>
         {results &&
           results.map((result, i) => (
-            <StyledCard>
-              <div key={i}>
+            <StyledCard key={i}>
+              <div>
                 <div className="search-card-cover">
                   <img
                     className="img-small"
@@ -84,11 +108,60 @@ const ResultCard = (props, { image, name, episodes, location }) => {
                       {result.location.name}
                     </div>
                   </div>
+                  <div
+                    data-testid="history-card-link-element"
+                    id="history-card-btn"
+                  >
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        showDetails(result.id);
+                      }}
+                    >
+                      More Info
+                    </Button>
+                  </div>
                 </div>
               </div>
             </StyledCard>
           ))}
       </StyledPageCover>
+      {show && (
+        <Modal onClose={showModal} onBlur={showModal} show={show}>
+          {character && console.log("chh==========", character)}
+          <img src={character && character.image} alt="character image" />
+          <div className="content">
+            <div>
+              <h2>Select information to share</h2>
+              <input
+                type="checkbox"
+                data-testid="modal-input-elements"
+                name=""
+                value=""
+              />
+              <label>Flight Number: </label>
+              <br />
+              <input
+                type="checkbox"
+                data-testid="modal-input-elements"
+                name=""
+                value=""
+              />
+              <label>Mission Name: </label>
+              <br />
+              <input
+                type="checkbox"
+                data-testid="modal-input-elements"
+                name=""
+                value=""
+              />
+              <label> Launch Year: </label>
+              <br />
+              <br />
+            </div>
+          </div>
+        </Modal>
+      )}
       <Button>Clear</Button> //Todo
       <Button>Pagination</Button> //Todo
     </>

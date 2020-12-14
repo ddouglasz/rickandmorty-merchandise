@@ -38,45 +38,46 @@ const StyledModal = styled.div`
   }
 `;
 
-class Modal extends React.Component {
-  onClose = (e) => {
-    this.props.onClose && this.props.onClose(e);
+const Modal = (props) => {
+  console.log("from modal", props);
+  const onClose = (e) => {
+    props && props.onClose(e);
   };
-
-  render() {
-    if (!this.props.show) {
-      return null;
-    }
-    return (
-      <StyledModal>
-        <div data-testid="modal-container" className="inner">
-          <img
-            src={close}
-            alt=""
-            height={15}
-            width={15}
-            onClick={this.onClose}
-            className="close-btn"
-            color="red"
-            data-testid="close-modal-button"
-          />
-          <div>
-            <h2>Launch Information</h2>
-            <div>{}</div>
-          </div>
-          <div className="send-btn">
-            <Button
-              type="submit"
-              onClick={this.onClose}
-              data-testid="modal-send-button"
-            >
-              Send
-            </Button>
-          </div>
+  const buyMerchandise = () => {
+    alert("Hurray! Merchandise Purchase!");
+  };
+  // if (props.show) {
+  //   return null;
+  // }
+  return (
+    <StyledModal>
+      <div data-testid="modal-container" className="inner">
+        <img
+          src={close}
+          alt=""
+          height={15}
+          width={15}
+          onClick={() => onClose()}
+          className="close-btn"
+          color="red"
+          data-testid="close-modal-button"
+        />
+        <div>
+          <h2>Launch Information</h2>
+          <div>{}</div>
         </div>
-      </StyledModal>
-    );
-  }
-}
+        <div className="send-btn">
+          <Button
+            type="submit"
+            onClick={() => buyMerchandise()}
+            data-testid="modal-send-button"
+          >
+            Buy Merchandise
+          </Button>
+        </div>
+      </div>
+    </StyledModal>
+  );
+};
 
 export default Modal;

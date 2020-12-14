@@ -9,7 +9,7 @@ const Button = styled.button`
   outline: none;
   border: none;
   cursor: pointer;
-  width: 5rem;
+  width: 6rem;
 `;
 
 export default Button;

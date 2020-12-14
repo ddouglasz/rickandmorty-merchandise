@@ -44,3 +44,14 @@ export const getAllCharacters = async (page) => {
     return data;
   }
 };
+
+export const getOneCharacter = async (id) => {
+  try {
+    const character = await Axios.get(`/character/${id}`);
+    console.log("character from actions: ===>", character.data);
+    return character.data;
+  } catch (error) {
+    const { data } = error.response;
+    return data;
+  }
+};
