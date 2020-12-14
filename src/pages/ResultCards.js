@@ -11,10 +11,14 @@ import Loading from "../assets/loading.gif";
 
 const StyledCover = styled.div`
   .active {
-    border: solid 1px ${(props) => props.theme.colors.concrete};
+    border: solid 1px #03a9f4;
     background: ${(props) => props.theme.colors.selected};
-    /* width: 20px; */
     margin: 0 2px;
+    padding: 10px;
+  }
+  li {
+    padding: 10px;
+    border: solid 1px #03a9f4;
   }
   .clear-btn {
     position: fixed;
@@ -114,14 +118,13 @@ const ResultCard = (props) => {
   const [episodeArr, setEpisodeArr] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const [offSet, setOffSet] = useState(0);
-  const [paginationData, setPaginationData] = useState([]);
+  const data = results.splice(offSet, offSet + 5);
+  const [paginationData, setPaginationData] = useState(data);
 
   const handlePageChange = (pageNumber) => {
     setActivePage(pageNumber);
     setOffSet(pageNumber * 5);
-    const data = results.splice(offSet, offSet + 5);
     setPaginationData(data);
-    console.log("data ==>", data);
   };
 
   const showModal = () => {
@@ -161,12 +164,13 @@ const ResultCard = (props) => {
     created,
     episode,
   } = character;
+  console.log("paginationData", info);
 
   return (
     <StyledCover>
       <StyledPageCover>
         {results &&
-          results.map((result, i) => (
+          paginationData.map((result, i) => (
             <StyledCard key={i}>
               <div className="search-card-cover">
                 <div className="left-section">
