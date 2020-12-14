@@ -47,8 +47,13 @@ export const getAllCharacters = async (page) => {
 export const getOneCharacter = async (id) => {
   try {
     const character = await Axios.get(`/character/${id}`);
-    console.log("character from actions: ===>", character.data);
-    return character.data;
+    let arr = [];
+    character.data.episode.forEach((url) => {
+      arr.push(url.split("/")[url.split("/").length - 1]); //take the last string of the url for multile array call
+    });
+    const { data } = character;
+    const episodesOfCharacter = await Axios.get(`/episode/${arr}`);
+    return { data, episodesOfCharacter };
   } catch (error) {
     const { data } = error.response;
     return data;

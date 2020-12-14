@@ -6,8 +6,52 @@ import { withRouter } from "react-router";
 import { respondTo } from "../utils/stylesHelper.js";
 import { getOneCharacter } from "../actions/index";
 import Modal from "../components/Modal";
-import { characterNames } from "../utils/shrekCharacterNames";
+import Pagination from "react-js-pagination";
+import Loading from "../assets/loading.gif";
 
+const StyledCover = styled.div`
+  .active {
+    border: solid 1px ${(props) => props.theme.colors.concrete};
+    background: ${(props) => props.theme.colors.selected};
+    /* width: 20px; */
+    margin: 0 2px;
+  }
+  .clear-btn {
+    position: fixed;
+    left: 20px;
+    bottom: 10px;
+  }
+  .pagination {
+    position: fixed;
+    display: flex;
+    right: 23px;
+    bottom: 0;
+    list-style: none;
+  }
+  .img-big {
+    width: 150px;
+    height: 150px;
+  }
+  .episodes-wrapper {
+    height: 250px;
+    margin-top: 5px;
+    overflow-y: scroll;
+  }
+  .created {
+    margin-bottom: 5px;
+  }
+  .episodes-or-character {
+    background-color: ${(props) => props.theme.colors.grayLight};
+    border-radius: ${(props) => props.theme.borders.borderRadius};
+    margin: 2px 0;
+    padding: 10px;
+  }
+  .character-episodes-header {
+    margin: 5px 0;
+    font-size: 20px;
+    background-color: ${(props) => props.theme.colors.lemon_green};
+  }
+`;
 const StyledPageCover = styled.div`
   padding: 15px 20px;
 `;
@@ -20,14 +64,14 @@ const StyledCard = styled.div`
     padding: 0.5rem 1rem;
   }
   .text {
-    margin: 1rem;
+    margin-bottom: 10px;
     ${respondTo("small", "max")} {
-      margin: 0.1rem;
+      margin: 0.1rem 0;
     }
   }
   .img-small {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
   .search-card-cover {
     display: flex;
@@ -37,16 +81,25 @@ const StyledCard = styled.div`
       display: block;
     }
   }
+  .left-section {
+    display: flex;
+    ${respondTo("small", "max")} {
+      display: block;
+    }
+  }
   .search-texts-cover {
     display: block;
-    margin: auto;
     padding: auto;
+    margin-left: 10px;
+    ${respondTo("small", "max")} {
+      margin-left: 0;
+    }
   }
   .character-name-result {
     color: ${(props) => props.theme.colors.lime_green};
   }
   .more-details-btn {
-    margin-top: 180px;
+    margin-top: 80px;
     ${respondTo("small", "max")} {
       margin-top: 10px;
     }
@@ -54,44 +107,69 @@ const StyledCard = styled.div`
 `;
 
 const ResultCard = (props) => {
-  const { results } = props.history.location.state;
+  const { results, info } = props.history.location.state;
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [character, setCharacter] = useState([]);
+  const [episodeArr, setEpisodeArr] = useState([]);
+  const [activePage, setActivePage] = useState(1);
+  const [offSet, setOffSet] = useState(0);
+  const [paginationData, setPaginationData] = useState([]);
+
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+    setOffSet(pageNumber * 5);
+    const data = results.splice(offSet, offSet + 5);
+    setPaginationData(data);
+    console.log("data ==>", data);
+  };
 
   const showModal = () => {
     setShow(!show);
   };
   const showDetails = (id) => {
+    showModal();
     getOneCharacter(id)
       .then((result) => {
-        if (result.error) {
+        if (result.data.error) {
           return setError(result.error);
         }
-        if (result && result.length !== 0) {
-          showModal();
-          setCharacter(result);
+        if (result && result.data.length !== 0) {
+          setCharacter(result.data);
+        }
+        if (result && result.episodesOfCharacter.data.length !== 0) {
+          setEpisodeArr(result.episodesOfCharacter.data);
         }
       })
       .catch((error) => {
         return setError(error);
       });
   };
-
   const clear = () => {
     props.history.push("/");
   };
 
-  const { id, name, status, species, type, gender } = character;
+  const {
+    id,
+    name,
+    status,
+    species,
+    type,
+    gender,
+    location,
+    origin,
+    created,
+    episode,
+  } = character;
 
   return (
-    <>
+    <StyledCover>
       <StyledPageCover>
         {results &&
           results.map((result, i) => (
             <StyledCard key={i}>
               <div className="search-card-cover">
-                <div>
+                <div className="left-section">
                   <img
                     className="img-small"
                     src={result.image}
@@ -105,7 +183,7 @@ const ResultCard = (props) => {
                         {result.name}
                       </span>
                     </div>
-                    <div className="text episodes">
+                    <div className="text text-episodes">
                       <strong className="character-name">
                         Number Of Episodes
                       </strong>
@@ -133,36 +211,112 @@ const ResultCard = (props) => {
       </StyledPageCover>
       {show && (
         <Modal onClose={showModal} show={show}>
-          <img src={character && character.image} alt="character image" />
+          <img
+            className="img-big"
+            src={character && character.image}
+            alt="character image"
+          />
           <div className="content">
             <div>
-              <label>Id: {id}</label>
+              <label className="label-text">
+                <strong>Id:</strong> {id}
+              </label>
               <br />
-              <label>Name: {name}</label>
+              <label className="label-text">
+                <strong>Name:</strong>{" "}
+                <span className="character-name-result">{name}</span>
+              </label>
               <br />
-              <label>Status: {status}</label>
+              <label className="label-text">
+                <strong>Status:</strong> {status}
+              </label>
               <br />
-              <label>Species: {species}</label>
+              <label className="label-text">
+                <strong>Species:</strong> {species}
+              </label>
               <br />
-              <label>Types: {type}</label>
+              <label className="label-text">
+                <strong>Types:</strong> {type}
+              </label>
               <br />
-              <label>Gender: {gender}</label>
+              <label className="label-text">
+                <strong>Gender:</strong> {gender}
+              </label>
               <br />
+              <label className="label-text">
+                <strong>Origin:</strong> {origin && origin.name}
+              </label>
+              <br />
+              <label className="label-text">
+                <strong>Origin Info:</strong>{" "}
+                <a href={origin && origin.url}>Click here</a>
+              </label>
+              <br />
+              <label className="label-text">
+                <strong>Location:</strong> {location && location.name}
+              </label>
+              <br />
+              <label className="label-text">
+                <strong>Location Info:</strong>{" "}
+                <a href={location && location.url}>Click here</a>
+              </label>
+              <br />
+              <label className="created">
+                <strong>Created:</strong> {created}
+              </label>
+              <br />
+              <label className="character-episodes-header">
+                <strong>Scroll to see character episodes</strong>
+              </label>
+              <div className="episodes-wrapper">
+                {episodeArr.map((arr) => (
+                  <div className="episodes-or-character">
+                    <label>
+                      <strong>Name: </strong>
+                      <span className="character-name-result">{arr.name}</span>
+                    </label>
+                    <br />
+                    <label>
+                      <strong>Episode: </strong>
+                      {arr.episode}
+                    </label>
+                    <br />
+                    <label>
+                      <strong>Air Date: </strong>
+                      {arr.air_date}
+                    </label>
+                    <br />
+                  </div>
+                ))}
+              </div>
+
               <br />
             </div>
           </div>
         </Modal>
       )}
-      <Button
-        onClick={(e) => {
-          e.preventDefault();
-          clear();
-        }}
-      >
-        Clear
-      </Button>
-      <Button>Pagination</Button>
-    </>
+      <div className="clear-btn">
+        <Button
+          danger={true}
+          onClick={(e) => {
+            e.preventDefault();
+            clear();
+          }}
+        >
+          Clear
+        </Button>
+      </div>
+
+      <div className="pagination">
+        <Pagination
+          activePage={activePage}
+          itemsCountPerPage={5}
+          totalItemsCount={info.count}
+          pageRangeDisplayed={5}
+          onChange={handlePageChange}
+        />
+      </div>
+    </StyledCover>
   );
 };
 

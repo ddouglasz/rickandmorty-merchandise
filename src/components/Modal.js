@@ -60,7 +60,7 @@ const Modal = (props) => {
           data-testid="close-modal-button"
         />
         <div>
-          <h2>Rick And Morty Character Information</h2>
+          <h2>Character Information</h2>
           <div>{props.children}</div>
         </div>
         <div className="send-btn">
