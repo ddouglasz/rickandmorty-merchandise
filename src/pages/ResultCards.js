@@ -11,10 +11,14 @@ import Loading from "../assets/loading.gif";
 
 const StyledCover = styled.div`
   .active {
-    border: solid 1px ${(props) => props.theme.colors.concrete};
+    border: solid 1px #03a9f4;
     background: ${(props) => props.theme.colors.selected};
-    /* width: 20px; */
     margin: 0 2px;
+    padding: 10px;
+  }
+  li {
+    padding: 10px;
+    border: solid 1px #03a9f4;
   }
   .clear-btn {
     position: fixed;
@@ -161,12 +165,13 @@ const ResultCard = (props) => {
     created,
     episode,
   } = character;
+  console.log("paginationData", paginationData);
 
   return (
     <StyledCover>
       <StyledPageCover>
         {results &&
-          results.map((result, i) => (
+          paginationData.map((result, i) => (
             <StyledCard key={i}>
               <div className="search-card-cover">
                 <div className="left-section">
