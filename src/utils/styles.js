@@ -2,18 +2,8 @@ import { rgba } from "polished";
 
 // Colors
 const colors = {
-  cobalt: "#135BFF",
-  midnight: "#132147",
-  midnightLight: rgba("#132147", 0.5),
-  red: "#C5471F",
   green: "#02514C",
-  dandelion: "#E8D083",
-
-  pink: "#FFE3E3",
-  pale_pink: "#FFEBEB",
-  powderBlue: "#D9EDF2",
-  powderBlueDark: "#CFE3E8",
-  mint: "#D4EFE9",
+  lime_green: "#32CD32",
 
   gray: "#B3B5C0",
   grayLight: "#D4D4D8",
@@ -72,23 +62,10 @@ export const ratios = {
   medium: 1.5, // 1vw = 1.5in
 };
 
-export const navHeight = "63px";
-export const navHeight_m = "110px";
-export const navPadding = "17px";
-export const navMargin = "3.5rem";
-export const navPadding_m = "1.5rem";
-const navLineHeight = "14px";
-
 // The Whole Theme
 const theme = {
   colors,
   ratios,
-  navHeight,
-  navLineHeight,
-  navHeight_m,
-  navPadding,
-  navPadding_m,
-  navMargin,
   borders,
   typography,
 };

@@ -1,55 +1,98 @@
-// import React from "react";
-// import { Link } from "react-router-dom";
-// import styled from "styled-components";
-// import Button from "../utils/Buttons";
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import Button from "../utils/Buttons";
+import { withRouter } from "react-router";
+import { respondTo } from "../utils/stylesHelper.js";
 
-// const StyledCard = styled.div`
-//   @media screen and (max-width: 736px) {
-//     display: block;
-//   }
-//   display: flex;
-//   background: ${(props) => props.theme.colors.gray};
-//   margin-bottom: 1rem;
-//   padding: 1rem;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   .decription {
-//     margin-bottom: 1rem;
-//   }
-//   .event-date {
-//     color: #239ad7;
-//   }
+const StyledPageCover = styled.div`
+  padding: 15px 20px;
+`;
 
-//   .event-description {
-//     color: #239ad7;
-//   }
+const StyledCard = styled.div`
+  display: flex;
+  background-color: ${(props) => props.theme.colors.grayLight};
+  margin-bottom: 2px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  ${respondTo("small", "max")} {
+    padding: 0.5rem 1rem;
+  }
+  .text {
+    margin: 1rem;
+    ${respondTo("small", "max")} {
+      margin: 0.1rem;
+    }
+  }
+  .img-small {
+    width: 100px;
+    height: 100px;
+  }
+  .search-card-cover {
+    display: flex;
+    ${respondTo("small", "max")} {
+      display: block;
+    }
+  }
+  .search-texts-cover {
+    display: block;
+    margin: auto;
+    padding: auto;
+  }
+  .character-name-result {
+    color: ${(props) => props.theme.colors.lime_green};
+  }
+`;
 
-//   #history-card-btn {
-//     @media screen and (max-width: 736px) {
-//       margin-top: 15px;
-//     }
-//   }
-// `;
+const ResultCard = (props, { image, name, episodes, location }) => {
+  const { state } = props.history.location;
+  const { results } = props.history.location.state;
 
-// const ResultCard = ({ image, name, episodes, location }) => {
-//   return (
-//     <StyledCard>
-//       <div>
-//         <div className="decription">
-//           <strong className="event-description">Character description</strong>:{" "}
-//           Character description here
-//         </div>
-//         <small className="event-date">Date here</small>
-//       </div>
-//       <div data-testid="history-card-link-element" id="history-card-btn">
-//         {/* <Link to={`/History/${history_id}`} id="">
-//           <Button>More Info</Button>
-//         </Link> */}
-//         <Link to="/">Back to main for now</Link>
-//       </div>
-//     </StyledCard>
-//   );
-// };
+  console.log("state ==>>", state);
+  console.log("props ==>>", props);
+  return (
+    <>
+      <StyledPageCover>
+        {results &&
+          results.map((result, i) => (
+            <StyledCard>
+              <div key={i}>
+                <div className="search-card-cover">
+                  <img
+                    className="img-small"
+                    src={result.image}
+                    alt="character image"
+                  />
+                  <div className="search-texts-cover">
+                    <div className="text name">
+                      <strong className="character-name">Character Name</strong>
+                      :{" "}
+                      <span className="character-name-result">
+                        {result.name}
+                      </span>
+                    </div>
+                    <div className="text episodes">
+                      <strong className="character-name">
+                        Number Of Episodes
+                      </strong>
+                      : {result.episode.length}
+                    </div>
+                    <div className="text location">
+                      <strong className="character-name">Last Location</strong>:{" "}
+                      {result.location.name}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </StyledCard>
+          ))}
+      </StyledPageCover>
+      <Button>Clear</Button> //Todo
+      <Button>Pagination</Button> //Todo
+    </>
+  );
+};
 
-// export default ResultCard;
+export default withRouter(ResultCard);

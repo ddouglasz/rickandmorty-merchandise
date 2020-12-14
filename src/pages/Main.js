@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Router } from "react-router";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { characterNames } from "../utils/shrekCharacterNames";
@@ -16,6 +17,7 @@ const StyledSearchPage = styled.div`
     font-family: GrinchedRegular;
     font-size: 125px;
     margin: 50px auto;
+    color: ${(props) => props.theme.colors.lime_green};
     ${respondTo("large", "max")} {
       font-size: 50px;
       margin-top: 40%;
@@ -52,7 +54,6 @@ const StyledSearchPage = styled.div`
 
   .auto-suggest {
     display: flex;
-    border-bottom: solid 1px ${(props) => props.theme.colors.gray};
     width: 96%;
     height: 20px;
     padding: 5px 0;
@@ -77,27 +78,7 @@ const StykledAutosuggest = styled.div`
   }
 `;
 
-const StyledCard = styled.div`
-  display: flex;
-  background: ${(props) => props.theme.colors.gray};
-  margin-bottom: 1rem;
-  padding: 1rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  .decription {
-    margin-bottom: 1rem;
-  }
-  .event-date {
-    color: #239ad7;
-  }
-
-  .event-description {
-    color: #239ad7;
-  }
-`;
-
-const Main = () => {
+const Main = (props) => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [error, setError] = useState("");
@@ -114,9 +95,10 @@ const Main = () => {
   };
 
   const assingSearchParams = (search) => {
-    const queryStringArray = search.toLowerCase().split(/\W+/);
-
-    if (!characterNames.includes(search)) {
+    let queryStringArray = search.toLowerCase().split(/\W+/);
+    if (characterNames.includes(search)) {
+      setName(search);
+    } else {
       queryStringArray.forEach((string) => {
         switch (string) {
           case "male":
@@ -138,7 +120,7 @@ const Main = () => {
             setSpecies("alien");
             break;
           default:
-            setName(search);
+            return;
         }
       });
     }
@@ -151,37 +133,19 @@ const Main = () => {
         if (result.error) {
           return setError(result.error);
         }
-        if (result) {
-          console.log("searched-->>", result);
-          return setSearchResult(result);
+        if (result && result.length !== 0) {
+          setSearchResult(result);
         }
       })
       .catch((error) => {
         return setError(error);
+      })
+      .finally(() => {
+        searchResult.length !== 0 &&
+          props.history.push("/search", searchResult);
       });
   };
 
-  // useEffect(() => {
-  //   searchRickAndMortyCharacters(name, status, species, type, gender)
-  //     .then((result) => {
-  //       setLoading(true);
-  //       if (!result) {
-  //         //Set a message, 'Sorry, could not find a match for your search query'
-  //       }
-  //       if (result) {
-  //         // const { accountNumber, bank } = bankInformation;
-  //         // setAccountNumber(accountNumber);
-  //         // setBank(bank);
-  //         console.log(result);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       // console.log(error);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, []);
   return (
     <>
       <StyledSearchPage>
@@ -210,7 +174,6 @@ const Main = () => {
                 <a
                   className="auto-suggest"
                   onClick={() => setSearch(result)}
-                  onMouseMove={() => console.log("here")}
                   key={i}
                 >
                   {result}
@@ -220,25 +183,6 @@ const Main = () => {
           )}
         </form>
       </StyledSearchPage>
-      {searchResult.length !== 0 && (
-        <StyledCard>
-          <div>
-            <div className="decription">
-              <strong className="event-description">
-                Character description
-              </strong>
-              : Character description here
-            </div>
-            <small className="event-date">Date here</small>
-          </div>
-          <div data-testid="history-card-link-element" id="search-result">
-            {/* <Link to={`/`} id="">
-          <Button>More Info</Button>
-        </Link> */}
-            <Link to="/">Back to main for now</Link>
-          </div>
-        </StyledCard>
-      )}
     </>
   );
 };

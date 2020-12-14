@@ -1,1 +1,6 @@
-export const characterNames = ["Rick", "Ricky Morty", "Brave Shrek"];
+export const characterNames = [
+  "Rick",
+  "Ricky Morty",
+  "Brave Shrek",
+  "Morty Smith",
+];
